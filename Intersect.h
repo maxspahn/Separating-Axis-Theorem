@@ -14,7 +14,6 @@ private:
 
 bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 
-  // your implementation goes here
 	
 	// definition of polygon to store the data points
 	struct polygon { std::vector<int> x; std::vector<int> y; } polygon1, polygon2;
