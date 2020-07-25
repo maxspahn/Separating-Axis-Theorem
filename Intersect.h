@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <math.h>
 #include <algorithm>
 
 class Intersect {
@@ -9,6 +8,7 @@ public:
 
 
 private:
+
 };
 
 
@@ -16,42 +16,59 @@ bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 
   // your implementation goes here
 	
-	// definition of the struct "polygon" to store the data points
+	// definition of polygon to store the data points
 	struct polygon { std::vector<int> x; std::vector<int> y; } polygon1, polygon2;
 
-	// // READ 1ST POLYGON from string to new data type
-	std::string delimiter = ",";
+	// Read 1st polygon from string to new data type
+	const std::string delimiter = ",";
 	size_t pos = 0;
 	std::string token;
+	int i_temp1;
+	int i_temp2;
 	while ((pos = polygonA.find(delimiter)) != std::string::npos) {
+		// convert to integer
 		token = polygonA.substr(0, pos);
-		polygon1.x.push_back((int)token[0] - 48);
-		polygon1.y.push_back((int)token[2] - 48);
+		const char *char_temp = token.c_str();
+		sscanf_s(char_temp, "%i %i", &i_temp1, &i_temp2);
+
+		// store in polygon data type
+		polygon1.x.push_back(i_temp1);
+		polygon1.y.push_back(i_temp2);
 		polygonA.erase(0, pos + delimiter.length());
 	}
-	polygon1.x.push_back((int)polygonA[0] - 48);
-	polygon1.y.push_back((int)polygonA[2] - 48);
-	
+	// store also last point 
+	const char *char_temp = polygonA.c_str();
+	sscanf_s(char_temp, "%i %i", &i_temp1, &i_temp2);
+	polygon1.x.push_back(i_temp1);
+	polygon1.y.push_back(i_temp2);
 
-	// READ 2ND POLYGNON from string to new data type
-	size_t posB = 0;
-	while ((posB = polygonB.find(delimiter)) != std::string::npos) {
-		token = polygonB.substr(0, posB);
-		polygon2.x.push_back((int)token[0] - 48);
-		polygon2.y.push_back((int)token[2] - 48);
-		polygonB.erase(0, posB + delimiter.length());
+
+	// Read 2nd polygon from string to new data type
+	pos = 0;
+	while ((pos = polygonB.find(delimiter)) != std::string::npos) {
+		// convert to integer
+		token = polygonB.substr(0, pos);
+		const char *char_tempB = token.c_str();
+		sscanf_s(char_tempB, "%i %i", &i_temp1, &i_temp2);
+		// store in polygon data type
+		polygon2.x.push_back(i_temp1);
+		polygon2.y.push_back(i_temp2);
+		polygonB.erase(0, pos + delimiter.length());
 	}
-	polygon2.x.push_back((int)polygonB[0] - 48);
-	polygon2.y.push_back((int)polygonB[2] - 48);
+	// store also last point
+	const char *char_tempB = polygonB.c_str();
+	sscanf_s(char_tempB, "%i %i", &i_temp1, &i_temp2);
+	polygon2.x.push_back(i_temp1);
+	polygon2.y.push_back(i_temp2);
 
 
 	// // SEPARATING AXIS THEOREM:
-	// "If we find an axis that separates the both polygons, then the polygons cannot overlap!" this works only for convex polygons!
+	// If we find an axis that separates the both polygons, then the polygons cannot overlap! This works only for convex polygons!
 
 	// Loop over the sides of first polygon
 	for (int i = 0; i < polygon1.x.size()-1; i++)
 	{
-		// // construct normalized projection axis
+	// // construct normalized projection axis
 		double axis[2]			= {};
 		double perpendicular[2] = {};
 		std::vector<double> projectionsA;
@@ -74,14 +91,14 @@ bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 		// Loop over vertices of 1st polygon
 		for (int j = 0; j < polygon1.x.size(); j++)
 		{
-			// dot product maps vertices on 1D-line
+			// dot product maps vertices on 1D-axis
 			double dot_product = polygon1.x[j] * perpendicular[0] + polygon1.y[j] * perpendicular[1];
 			projectionsA.push_back(dot_product);
 		}
 		// Loop over vertices of 2nd polygon
 		for (int j = 0; j < polygon2.x.size(); j++)
 		{
-			// dot product maps vertices on 1D-line
+			// dot product maps vertices on 1D-axis
 			double dot_product = polygon2.x[j] * perpendicular[0] + polygon2.y[j] * perpendicular[1];
 			projectionsB.push_back(dot_product);
 		}
@@ -97,12 +114,12 @@ bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 		if (maxA < minB || minA > maxB) { 
 			return false; // return false, if a separating axis is found and the polygons are not overlapping
 		}
-	} // end for-loop around the sides of 1st polygon
+	} // end for-loop over the sides of 1st polygon
 
 	// Loop over sides of second polygon
 	for (int i = 0; i < polygon2.x.size() - 1; i++)
 	{
-		// // construct normalized projection axis
+	// // construct normalized projection axis
 		double axis[2] = {};
 		double perpendicular[2] = {};
 		std::vector<double> projectionsA;
@@ -147,7 +164,7 @@ bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 		if (maxA < minB || minA > maxB) {
 			return false; // return false, if a separating axis is found and the polygons are not overlapping
 		}		
-	} // end for-loop around sides of 2nd polygon
+	} // end for-loop over sides of 2nd polygon
 
   return true;
 }
