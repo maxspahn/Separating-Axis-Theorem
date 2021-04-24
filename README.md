@@ -1,2 +1,2 @@
 # Separating-Axis-Theorem
-coding challenge for student job
+Implementation of the Separating-Axis-Theorem for a Coding Challenge.
