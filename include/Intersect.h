@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 
+
 class Intersect {
 public:
   static bool overlap(std::string polygonA, std::string polygonB);
@@ -14,6 +15,7 @@ private:
 
 bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 
+#ifdef __STDC_LIB_EXT1__
 	
 	// definition of polygon to store the data points
 	struct polygon { std::vector<int> x; std::vector<int> y; } polygon1, polygon2;
@@ -164,6 +166,7 @@ bool Intersect::overlap(std::string polygonA, std::string polygonB) {
 			return false; // return false, if a separating axis is found and the polygons are not overlapping
 		}		
 	} // end for-loop over sides of 2nd polygon
+#endif
 
   return true;
 }
